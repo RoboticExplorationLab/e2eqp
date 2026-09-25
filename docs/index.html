@@ -9,52 +9,219 @@
   <meta property="og:description" content="A unified perspective on robust control and robot learning.">
   <meta property="og:image" content="og.png">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main>
-    <section class="hero"><div class="container centered">
-      <h1>End-to-end QP-based policies:<br><span>A unified perspective on robust control and robot learning</span></h1>
-      <div class="authors"><a href="#">Anonymous Authors</a></div>
-      <div class="affiliations">Project Page</div>
-      <div class="publication-links"><span class="pill muted">▤ Paper coming soon</span><span class="pill muted">⌘ Code coming soon</span></div>
-    </div></section>
+    <section class="hero-overlay">
+      <video src="media/hero_fan.mp4" poster="media/hero_fan.jpg" autoplay muted loop playsinline aria-label="A Crazyflie quadrotor holds position in a 5 m/s crosswind from an industrial fan"></video>
+      <div class="hero-scrim"></div>
+      <div class="hero-content container centered">
+        <h1>End-to-end QP-based policies:<br><span>A unified perspective on robust control and robot learning</span></h1>
+        <div class="authors">Anonymous Authors</div>
+        <div class="publication-links"><a class="pill youtube" href="https://youtu.be/gf8oYBzfIaI" target="_blank" rel="noopener">▶ Watch on YouTube</a><span class="pill muted">▤ Paper coming soon</span><span class="pill muted">⌘ Code coming soon</span></div>
+      </div>
+    </section>
 
     <section class="teaser"><div class="container">
-      <div class="placeholder overview-placeholder"><div class="placeholder-art"><span></span><span></span><span></span></div><small>Project overview image placeholder</small></div>
       <h2>Can the optimization problem itself serve as the policy?</h2>
-      <p>We formulate quadratic programs as end-to-end differentiable policy representations, unifying model-based control and robot learning while retaining structure, constraints, and interpretability.</p>
+      <p>Rather than combining separately designed model-based and learning components, we formulate the optimization problem itself as the policy representation, with its defining parameters learned end-to-end from downstream objectives. The same representation accommodates model-based control, where analytical structure is retained and tuned over distributions of models and disturbances, and black-box control, where policies are learned directly from input–output behavior.</p>
     </div></section>
 
-    <section class="section light" id="abstract"><div class="container narrow centered"><h2 class="title">Abstract</h2><div class="content justified">
-      <p>We present an end-to-end QP-based policy framework that enables systematic policy construction with minimal domain-specific design, while preserving the transparency and interpretability of model-based control. The proposed policy representation supports both domain-randomized model-based auto-tuning, where policy parameters are optimized over distributions of disturbances and model variations, and black-box policy construction, where the problem is formulated in terms of a possibly unknown model without requiring explicit notions of states, inputs, or the underlying system dynamics.</p>
-      <p>We establish connections to robust control, multilayer perceptrons, and robot learning, and validate the framework in simulation and hardware across robustness, automatic policy tuning, and control under unknown dynamics.</p>
-    </div></div></section>
+    <section class="section light" id="abstract"><div class="container narrow"><h2 class="title centered">Abstract</h2><div class="content justified">
+      <p>We present an end-to-end QP-based policy framework that enables systematic policy construction with minimal domain-specific design, while preserving the transparency and interpretability of model-based control. The proposed policy representation supports both domain-randomized model-based auto-tuning, where policy parameters are optimized over distributions of disturbances and model variations, and black-box policy construction, where the problem is formulated in terms of a (possibly) unknown model without requiring explicit notions of states, inputs, or the underlying system dynamics.</p>
+      <p>We establish connections to existing policy representations and control paradigms, including robust control, multilayer perceptrons, and robot learning, and interpret our end-to-end QP policies as a common abstraction of these approaches. We validate the resulting framework in both simulation and hardware, demonstrating a broad range of applications spanning robustness, automatic policy tuning, and control under unknown system dynamics.</p>
+    </div>
+    </div></section>
 
     <section class="section" id="method"><div class="container"><h2 class="title centered">End-to-end QP policies</h2>
-      <div class="placeholder method-placeholder"><div class="placeholder-art"><span></span><span></span><span></span></div><small>Method figure placeholder</small></div>
-      <div class="content"><p>The control action is obtained from a parameterized quadratic program. Rather than treating optimization as one layer within a larger architecture, the optimization problem is the policy representation and its defining parameters are learned directly from closed-loop task performance.</p></div>
-      <div class="equation"><span>state x</span><b>→</b><strong>QP policy π<sub>θ</sub><sup>QP</sup></strong><b>→</b><span>action u</span><b>→</b><span>closed-loop rollout</span><b>→</b><strong>loss 𝓛</strong></div>
+      <figure class="diagram method card">
+        <svg viewBox="0 0 844 380" role="img" aria-labelledby="dg-title dg-desc">
+          <title id="dg-title">End-to-end QP policy training</title>
+          <desc id="dg-desc">A quadratic program with learnable parameters theta maps the state x to an action u and defines the policy class. Closed-loop rollouts with a disturbance, the plant and a task loss, randomized over disturbances, models and initial conditions, select a policy from that class. The gradient of the task loss is propagated back through the QP to its parameters theta.</desc>
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#363636"/></marker>
+            <marker id="ah-grad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2f6fd0"/></marker>
+          </defs>
+
+          <text class="dg-h" x="170" y="28">Policy class</text>
+          <text class="dg-sub" x="170" y="48">what the QP can represent</text>
+          <text class="dg-h" x="610" y="28">Policy selection</text>
+          <text class="dg-sub" x="610" y="48">which policy closed-loop training picks</text>
+
+          <rect x="30" y="110" width="280" height="150" rx="12" fill="#f7ece2" stroke="#9a5a22" stroke-width="2"/>
+          <text class="dg-box-h" x="170" y="184">quadratic program</text>
+          <text class="dg-note" x="170" y="210">learnable parameters θ</text>
+
+          <rect x="454" y="66" width="360" height="250" rx="12" fill="#fff" stroke="#c5ccd3" stroke-width="1.5"/>
+          <rect x="442" y="78" width="360" height="250" rx="12" fill="#fff" stroke="#b3bcc4" stroke-width="1.5"/>
+          <rect x="430" y="90" width="360" height="250" rx="12" fill="#f3f5f7" stroke="#363636" stroke-width="2"/>
+          <text class="dg-note dg-start" x="446" y="110">closed-loop rollout</text>
+
+          <rect x="470" y="118" width="280" height="42" rx="6" fill="#fff" stroke="#363636" stroke-width="1.5"/>
+          <text class="dg-box" x="610" y="144">disturbance</text>
+          <rect x="470" y="195" width="280" height="42" rx="6" fill="#fff" stroke="#363636" stroke-width="1.5"/>
+          <text class="dg-box" x="610" y="221">plant</text>
+          <rect x="470" y="272" width="280" height="42" rx="6" fill="#fff" stroke="#363636" stroke-width="1.5"/>
+          <text class="dg-box" x="610" y="298">task loss 𝓛</text>
+
+          <path d="M610 160V193" class="dg-arrow" marker-end="url(#ah)"/>
+          <text class="dg-lbl dg-start" x="620" y="182">w</text>
+          <path d="M610 237V270" class="dg-arrow" marker-end="url(#ah)"/>
+          <text class="dg-lbl dg-start" x="620" y="259">trajectory</text>
+
+          <path d="M310 206H468" class="dg-arrow" marker-end="url(#ah)"/>
+          <text class="dg-lbl" x="390" y="197">action u</text>
+          <path d="M470 227H312" class="dg-arrow" marker-end="url(#ah)"/>
+          <text class="dg-lbl" x="390" y="248">state x</text>
+
+          <path d="M470 293H170V262" class="dg-arrow dg-grad" marker-end="url(#ah-grad)"/>
+          <text class="dg-grad-h" x="300" y="324">end-to-end gradient</text>
+          <text class="dg-grad-sub" x="300" y="344">differentiate through the QP (QPAX)</text>
+
+          <text class="dg-sub" x="622" y="366">randomized over disturbances, models &amp; initial conditions</text>
+        </svg>
+      </figure>
+      <div class="chips"><span>Connections to:</span><a href="#neural-networks">neural network policies</a><a href="#robust-control">robust control</a><a href="#lunar-lander">robot learning</a></div>
+      <div class="content narrow"><p>The control action is obtained from the solution of a parameterized quadratic program, and the parameters θ define its objective, constraints, and how the action is read out from the solution. Rather than fixing a single QP structure, the formulation can vary with the problem, from a simple projection QP to a trajectory-optimization QP with predictive dynamics, horizon coupling, costs, and constraints. Different structures induce different classes of control laws.</p>
+      <p>The parameters are optimized directly from closed-loop task performance over a batch of rollouts. Sampling initial conditions trains over a distribution of starting states, sampling plant parameters gives domain randomization over model uncertainty, and sampling disturbances exposes the policy to exogenous inputs. Because both the QP and the plant rollout are differentiable, gradients of the outer objective propagate through every closed-loop trajectory back to θ.</p>
+      <p>The key design principle is a <b>separation between QP structure and outer objective</b>. The QP specifies <b>which policies can be represented</b>, while the outer objective (an empirical mean, a risk-sensitive measure, or a worst case) determines <b>which policy is learned</b>, without changing the QP. This separation is what connects the framework to neural-network policies, robust control, and domain-randomized robot learning.</p></div>
     </div></section>
 
-    <section class="section light"><div class="container"><h2 class="title centered">Connections across control and learning</h2><div class="columns three">
-      <article><h3>Neural policies</h3><div class="placeholder"><small>ReLU equivalence figure</small></div><p>A single-hidden-layer ReLU network is exactly representable as a projection QP, exposing a direct connection between neural and optimization-based policies.</p></article>
-      <article><h3>Robust control</h3><div class="placeholder"><small>Robust control result</small></div><p>Mean and worst-case outer objectives recover H₂- and H∞-type behavior while leaving the underlying QP structure unchanged.</p></article>
-      <article><h3>Robot learning</h3><div class="placeholder"><small>Domain randomization result</small></div><p>Policy parameters are tuned over distributions of models, initial conditions, and disturbances using differentiable closed-loop rollouts.</p></article>
-    </div></div></section>
+    <section class="section light" id="neural-networks"><div class="container"><h2 class="title centered">Connection to neural networks</h2>
+      <figure class="diagram card">
+        <svg viewBox="0 0 960 400" role="img" aria-labelledby="nn-title nn-desc">
+          <title id="nn-title">ReLU network as a projection QP</title>
+          <desc id="nn-desc">Left: a single-hidden-layer ReLU policy maps the state x through a hidden layer to the action u. Right: the same hidden activations are the solution of a projection QP, the closest point in the nonnegative orthant. A point outside the orthant is projected to the closest point on its boundary, which is exactly the ReLU output.</desc>
+          <defs>
+            <marker id="nn-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#363636"/></marker>
+            <marker id="nn-ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2f6fd0"/></marker>
+            <g id="relu-node"><circle r="20" fill="#fff" stroke="#2c7a6b" stroke-width="2"/><path d="M-11 5H0L10 -8" fill="none" stroke="#2c7a6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>
+          </defs>
 
-    <section class="section" id="results"><div class="container"><h2 class="title centered">Simulation experiments</h2>
-      <div class="media-row"><div class="placeholder video"><small>Lunar landing video placeholder</small></div><div class="content"><h3>Robust lunar landing</h3><p>A predictive QP controller is trained across a fleet of vehicles with uncertain initial conditions and slosh dynamics. Domain randomization reduces tail errors: the learned controller’s worst landing error is less than one third of the nominal controller’s largest error.</p></div></div>
-      <div class="media-row reverse"><div class="placeholder video"><small>Cartpole video placeholder</small></div><div class="content"><h3>Black-box cartpole control</h3><p>Projection-QP policies learn nonlinear swing-up behavior directly from input-output rollouts, without requiring an explicit model or predefined notions of system state and input.</p></div></div>
+          <text class="dg-h" x="230" y="28">Single-hidden-layer ReLU policy</text>
+          <text class="dg-sub" x="230" y="48">a standard neural-network policy</text>
+          <text class="dg-h" x="730" y="28">Projection QP</text>
+          <text class="dg-sub" x="730" y="48">closest point in the nonnegative orthant</text>
+
+          <rect x="78" y="90" width="64" height="240" rx="8" fill="#e6eef6" stroke="#9fb6cc"/>
+          <rect x="196" y="90" width="68" height="240" rx="8" fill="#e5f2ee" stroke="#9cc5b9"/>
+          <rect x="318" y="90" width="64" height="240" rx="8" fill="#f7ece2" stroke="#d2ab86"/>
+
+          <g stroke="#8a97a3" stroke-width="1.2">
+            <path d="M110 170L230 120M110 170L230 180M110 170L230 240M110 170L230 300M110 250L230 120M110 250L230 180M110 250L230 240M110 250L230 300"/>
+            <path d="M230 120L350 210M230 180L350 210M230 240L350 210M230 300L350 210"/>
+          </g>
+          <circle cx="110" cy="170" r="18" fill="#2f6fa8"/>
+          <circle cx="110" cy="250" r="18" fill="#2f6fa8"/>
+          <use href="#relu-node" x="230" y="120"/>
+          <use href="#relu-node" x="230" y="180"/>
+          <use href="#relu-node" x="230" y="240"/>
+          <use href="#relu-node" x="230" y="300"/>
+          <circle cx="350" cy="210" r="18" fill="#9a5a22"/>
+
+          <text class="dg-box" x="110" y="356">state x</text>
+          <text class="dg-box" x="230" y="356">hidden layer</text>
+          <text class="dg-box" x="350" y="356">action u</text>
+          <text class="dg-note" x="230" y="376">each unit applies ReLU</text>
+
+          <text x="480" y="228" style="font-size:54px;font-weight:700">=</text>
+          <text class="dg-note" x="480" y="262">same policy class</text>
+
+          <path d="M570 260H900" class="dg-arrow" marker-end="url(#nn-ah)"/>
+          <path d="M640 350V86" class="dg-arrow" marker-end="url(#nn-ah)"/>
+          <rect x="641" y="100" width="239" height="159" fill="#f7ece2" stroke="#d2ab86"/>
+          <text class="dg-box" x="760" y="170" style="fill:#7a4312">nonnegative orthant</text>
+          <text class="dg-note" x="760" y="190">where the hidden values must lie</text>
+
+          <path d="M730 330V271" fill="none" stroke="#2f6fd0" stroke-width="2.2" stroke-dasharray="6 4" marker-end="url(#nn-ah-blue)"/>
+          <text class="dg-lbl" x="720" y="305" style="text-anchor:end;fill:#2f6fd0">projection</text>
+          <circle cx="730" cy="338" r="9" fill="#fff" stroke="#2f6fd0" stroke-width="2.5"/>
+          <circle cx="730" cy="260" r="9" fill="#2f6fd0"/>
+          <text class="dg-box dg-start" x="748" y="343">input to ReLU</text>
+          <text class="dg-box dg-start" x="748" y="250">ReLU output</text>
+        </svg>
+      </figure>
+      <div class="content narrow"><p>The ReLU activation is exactly the Euclidean projection onto the nonnegative orthant. A single-hidden-layer ReLU policy can therefore be written as a <b>projection QP</b>: the QP solution gives the hidden-layer values, and the output layer maps them to the action, exactly as in the network. The ReLU network is a special case of the QP policy, and the two have the same expressive capacity: the same piecewise-affine policy class, in a different representation.</p></div>
+      <div class="media-row">
+        <video class="card" src="media/cartpole.mp4" poster="media/cartpole.jpg" autoplay muted loop playsinline></video>
+        <div class="content"><h3>Nonlinear cart&#8209;pole swing&#8209;up</h3><p>A linear-MPC QP relies on a local linear model and is best suited to regulation near its linearization point. The projection QP needs no predictive model. We learn its weights and biases from batches of 128 differentiable cart-pole rollouts from sampled initial conditions.</p><p>The nonnegativity constraints become active in different regions of the state space, producing different affine feedback laws. The resulting piecewise-affine policy pumps energy into the pendulum and then stabilizes it upright.</p></div>
+      </div>
     </div></section>
 
-    <section class="section light"><div class="container"><h2 class="title centered">Hardware experiment</h2>
-      <div class="placeholder hardware-video"><small>Crazyflie crosswind video placeholder</small></div>
-      <div class="content narrow"><p>A Crazyflie quadrotor flies through a 5 m/s crosswind generated by an industrial fan. The framework jointly tunes the structured controller and disturbance observer from randomized rollouts. The learned QP policy converges faster than manually tuned MPC baselines and drives steady-state position error to zero.</p></div>
-      <div class="columns metrics"><div><b>45 Hz</b><span>QP policy</span></div><div><b>500 Hz</b><span>low-level control</span></div><div><b>5 m/s</b><span>crosswind</span></div></div>
+    <section class="section" id="robust-control"><div class="container"><h2 class="title centered">Connection to robust control</h2>
+      <div class="content narrow"><p>In the unconstrained linear time-invariant case, a trajectory-optimization QP reduces to linear state feedback, so learning the QP parameters selects a feedback gain. Rollout losses are aggregated over exogenous disturbances and over plant instances by two independently chosen operators. With the QP policy itself unchanged, the choice of these operators recovers familiar robust-control objectives on a double-integrator regulation task.</p></div>
+      <div class="columns three figs">
+        <figure><img class="card" src="media/fig1a_h2_hinf.png" alt="Gains during training: the mean objective converges to the classical H2 gain, the max objective to the classical H-infinity gain." loading="lazy"><figcaption><b>(a) Disturbance uncertainty.</b> Over a bank of sinusoidal disturbances, averaging the frequency-response gains gives an H<sub>2</sub>-type objective and taking the largest gives an H<sub>∞</sub>-type objective. The learned gains approach the classical H<sub>2</sub> (DARE) and H<sub>∞</sub> solutions.</figcaption></figure>
+        <figure><img class="card" src="media/fig1b_entropic_risk.png" alt="Average versus worst-case cost for controllers trained with increasing entropic risk parameter beta." loading="lazy"><figcaption><b>(b) Model uncertainty.</b> An entropic-risk objective interpolates between the mean plant cost (β → 0) and the worst case (β → ∞), trading average for worst-case performance.</figcaption></figure>
+        <figure><img class="card" src="media/fig1c_worst_case_hinf.png" alt="Peak disturbance amplification across the uncertain plant family for nominal H-infinity, classical LMI robust H-infinity, and the differentiable QP." loading="lazy"><figcaption><b>(c) Both combined.</b> Taking the worst case over both disturbances and plants gives a sampled worst-case H<sub>∞</sub> objective. The learned QP matches the classical LMI design to within 0.16% (8.35 vs 8.36). The nominal H<sub>∞</sub> design degrades to 8.83.</figcaption></figure>
+      </div>
     </div></section>
 
-    <footer><div class="container">This website follows the Academic Project Page Template. Media placeholders will be replaced with final project assets.</div></footer>
+    <section class="section light" id="lunar-lander"><div class="container"><h2 class="title centered">Robust control with domain randomization</h2>
+      <div class="lander-grid">
+        <figure class="diagram lg-schematic">
+          <svg viewBox="0 0 500 390" role="img" aria-labelledby="ll-title ll-desc">
+            <title id="ll-title">Lunar lander with fuel slosh</title>
+            <desc id="ll-desc">A lunar lander descending toward a landing target. The rigid body is modeled by the MPC. The fuel sloshing inside the tank is not in the MPC model and is randomized during training. Thrust and gimbal angle are the control inputs.</desc>
+            <defs>
+              <marker id="ll-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2f6fd0"/></marker>
+            </defs>
+            <text class="dg-h" x="250" y="28">Lunar lander with fuel slosh</text>
+            <text class="dg-sub" x="250" y="48">reusable lander landing with a half-full tank</text>
+
+            <rect x="10" y="345" width="480" height="30" fill="#ecebe8"/>
+            <path d="M10 345H490" stroke="#b9b6b0" stroke-width="1.5"/>
+            <path d="M135 345H185" stroke="#d9822b" stroke-width="5" stroke-linecap="round"/>
+            <text class="dg-note" x="160" y="368">landing target</text>
+
+            <path d="M146 250Q160 318 174 250Z" fill="#f5b041" opacity=".85"/>
+            <path d="M151 250Q160 290 169 250Z" fill="#fde2a3"/>
+            <path d="M150 222H170L177 248H143Z" fill="#8c8c8c" stroke="#555" stroke-width="1.5"/>
+
+            <g stroke="#555" stroke-width="3" stroke-linecap="round" fill="none">
+              <path d="M118 212L80 292M202 212L240 292M66 292H94M226 292H254"/>
+            </g>
+            <path d="M160 110V90" stroke="#555" stroke-width="2"/>
+            <circle cx="160" cy="88" r="3.5" fill="#555"/>
+            <path d="M130 110H190L212 135V200L190 224H130L108 200V135Z" fill="#e4e7ea" stroke="#555" stroke-width="2"/>
+            <rect x="124" y="128" width="72" height="80" rx="10" fill="#fff" stroke="#555" stroke-width="1.8"/>
+            <path d="M125 178Q145 166 160 168T195 160V198Q195 207 186 207H134Q125 207 125 198Z" fill="#8fbfe6"/>
+            <path d="M125 178Q145 166 160 168T195 160" fill="none" stroke="#2f6fd0" stroke-width="2"/>
+            <path d="M134 150Q160 138 186 146" fill="none" stroke="#2f6fd0" stroke-width="2" marker-start="url(#ll-ah)" marker-end="url(#ll-ah)"/>
+
+            <g stroke="#999" stroke-width="1.2">
+              <path d="M213 128L268 118"/><path d="M190 185L268 190"/><path d="M178 240L268 262"/>
+            </g>
+            <text class="dg-box dg-start" x="275" y="116">Rigid body</text>
+            <text class="dg-note dg-start" x="275" y="134">modeled by the MPC</text>
+            <text class="dg-box dg-start" x="275" y="188" style="fill:#2f6fd0">Fuel slosh</text>
+            <text class="dg-note dg-start" x="275" y="206">not in the MPC model,</text>
+            <text class="dg-note dg-start" x="275" y="222">randomized in training</text>
+            <text class="dg-box dg-start" x="275" y="260">Thrust &amp; gimbal</text>
+            <text class="dg-note dg-start" x="275" y="278">control inputs</text>
+          </svg>
+        </figure>
+        <figure class="lg-cdf"><img src="media/fig2_landing_radius.png" alt="Percentage of 1,000 landings within a given radius, with and without domain randomization. Worst landing error: 0.38 m with DR, 1.40 m without." loading="lazy"></figure>
+        <figure class="lg-traj"><video src="media/terminal_trajectories.mp4" poster="media/terminal_trajectories.jpg" autoplay muted loop playsinline aria-label="Animated final descent of the fleet with and without domain randomization"></video></figure>
+      </div>
+      <p class="group-caption"><b>Top left:</b> the MPC models only the lander's rigid body; fuel slosh is randomized during training. <b>Bottom left:</b> landings within a given radius across 1,000 vehicles, with and without domain randomization (DR); the inset shows the worst 10% of landings. <b>Right:</b> final descent of the fleet, where DR landings cluster tightly on the target.</p>
+      <div class="content narrow"><h3>Lunar lander with unmodeled fuel slosh</h3><p>A reusable lander must touch down carrying enough propellant for ascent and return to orbit (a propellant mass fraction of about 0.5), which produces significant slosh. The slosh is unobservable, so the MPC's internal model covers only the rigid body (vertical position, horizontal position, orientation), with thrust magnitude and gimbal angle as inputs. The training plant also includes the first slosh mode.</p>
+      <p>Two controllers share the same architecture, horizon, and constraints and differ only in how their cost weights are trained. One is trained on a fixed slosh model (no DR). The other is trained over a distribution of slosh mass, pendulum length, and damping ratio (DR). On the same fleet of 1,000 vehicles with dispersed initial conditions and slosh parameters, the DR controller's worst landing error is <b>less than a third</b> of the nominal controller's. Randomization costs nothing at run time: the deployed controller has the same structure as the nominal one.</p></div>
+      <div class="columns metrics"><div><b>1,000</b><span>simulated vehicles</span></div><div><b>0.38 m</b><span>max landing error, DR</span></div><div><b>1.40 m</b><span>max landing error, no DR</span></div></div>
+    </div></section>
+
+    <section class="section" id="hardware"><div class="container"><h2 class="title centered">Hardware experiment</h2>
+      <video class="hardware-video card" src="media/hardware.mp4" poster="media/hardware.jpg" controls autoplay muted loop playsinline></video>
+      <div class="content narrow"><p>We evaluate the full pipeline, state estimation and control together, on a Crazyflie quadrotor in a motion-capture arena. An industrial fan with a flow-conditioning rack produces a 5 m/s crosswind. The drone starts about 0.5 m from the fan and flies to a target 1.9 m downstream, where it must hold position.</p>
+      <p>To handle the persistent wind, the state is augmented with an estimated disturbance using a Luenberger observer. The estimated state and disturbance feed a trajectory-optimization QP, whose output is tracked by the onboard low-level controller. The QP cost parameters and the observer gains are learned jointly through differentiable closed-loop rollouts with wind of randomized direction and magnitude.</p>
+      <p>We compare against two MPC baselines hand-tuned with Bryson's rule for allowable position deviations of 10 cm and 5 cm, each with a fixed observer gain. More aggressive manual tuning led to unreliable flight. Over five trials, the learned QP policy converges substantially faster and drives the steady-state position error to zero. Both baselines converge more slowly and retain a residual error.</p></div>
+    </div></section>
+
+    <footer><div class="container">This website follows the Academic Project Page Template.</div></footer>
   </main>
 </body>
 </html>
